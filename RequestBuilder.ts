@@ -27,6 +27,7 @@ export default class RequsetBuilder {
   private queryParams: IKeyValue[] = [];
   private defaultHeaders = <any>{};
   private headers: IKeyValue[] = [];
+  private abortSignal?: AbortSignal;
   setMethod(method: Method): RequsetBuilder {
     this.method = method;
     return this;
@@ -35,6 +36,10 @@ export default class RequsetBuilder {
   addHeaders<T extends number | string>(key: string, value: T): RequsetBuilder {
     const stringValue = value.toString();
     this.headers?.push({ key, value: stringValue });
+    return this;
+  }
+  setAbortSignal(signal: AbortSignal): RequsetBuilder {
+    this.abortSignal = signal;
     return this;
   }
   setUrl(url: string): RequsetBuilder {
@@ -66,7 +71,7 @@ export default class RequsetBuilder {
       method: this.method,
       headers: this.defaultHeaders,
       data: this.body,
-      url,
+      signal: this.abortSignal,
     });
     return result;
   }
