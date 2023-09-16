@@ -8,7 +8,7 @@ interface IKeyValue {
 const env = {
   baseUrl: "",
 };
-export default class RequsetBuilder {
+export default class RequestBuilder {
   constructor(method?: Method, baseUrl?: string, url?: string) {
     if (method) {
       this.method = method;
@@ -28,32 +28,32 @@ export default class RequsetBuilder {
   private defaultHeaders = <any>{};
   private headers: IKeyValue[] = [];
   private abortSignal?: AbortSignal;
-  setMethod(method: Method): RequsetBuilder {
+  setMethod(method: Method): RequestBuilder {
     this.method = method;
     return this;
   }
 
-  addHeaders<T extends number | string>(key: string, value: T): RequsetBuilder {
+  addHeaders<T extends number | string>(key: string, value: T): RequestBuilder {
     const stringValue = value.toString();
     this.headers?.push({ key, value: stringValue });
     return this;
   }
-  setAbortSignal(signal: AbortSignal): RequsetBuilder {
+  setAbortSignal(signal: AbortSignal): RequestBuilder {
     this.abortSignal = signal;
     return this;
   }
-  setUrl(url: string): RequsetBuilder {
+  setUrl(url: string): RequestBuilder {
     this.url = url;
     return this;
   }
-  setBody(body: any): RequsetBuilder {
+  setBody(body: any): RequestBuilder {
     this.body = body;
     return this;
   }
   addQueryParam<T extends number | string>(
     key: string,
     value: T
-  ): RequsetBuilder {
+  ): RequestBuilder {
     const stringValue = value.toString();
     this.queryParams.push({ key, value: stringValue });
     return this;
