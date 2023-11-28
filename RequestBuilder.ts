@@ -1,10 +1,11 @@
 import axios, { AxiosResponse, Method } from "axios";
+
 // Create a new common interfaces file and include interface below inside that file
 interface IKeyValue {
   key: string;
   value: string;
 }
-// Create a new enviornment file and include env object that has baseUrl property
+// Create a new environment file and include env object that has baseUrl property
 const env = {
   baseUrl: "",
 };
@@ -72,6 +73,7 @@ export default class RequestBuilder {
       headers: this.defaultHeaders,
       data: this.body,
       signal: this.abortSignal,
+      url,
     });
     return result;
   }

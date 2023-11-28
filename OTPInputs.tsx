@@ -10,11 +10,11 @@ import {
 
 const OTPInputs = ({
   fieldLength,
-  finalCode,
+  finalCodeRef,
   inputClassNames,
 }: {
   fieldLength: number;
-  finalCode: MutableRefObject<number>;
+  finalCodeRef: MutableRefObject<number>;
   inputClassNames?: string;
 }) => {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -25,21 +25,26 @@ const OTPInputs = ({
     index: number
   ) => {
     const { value: inputValue } = event.target;
+    if (Number.isNaN(+inputValue)) return;
+
     const newOtp: string[] = [...otp];
     newOtp[index] = inputValue.substring(inputValue.length - 1);
     setOtp(newOtp);
   };
   const onKeyup = (event: KeyboardEvent<HTMLInputElement>) => {
-    const joinedCode = otp.join("");
-    finalCode.current = +joinedCode;
-    if (event.key !== "Backspace") {
-      if (activeOtpInput < fieldLength - 1) {
-        setActiveOtpInput((pervious) => ++pervious);
-      }
-    } else {
+    if (event.key === "Backspace") {
       if (activeOtpInput > 0) {
         setActiveOtpInput((pervious) => --pervious);
       }
+      return;
+    }
+    const enteredValue = (event.target as HTMLInputElement).value;
+    if (!enteredValue) return;
+
+    const joinedCode = otp.join("");
+    finalCodeRef.current = +joinedCode;
+    if (activeOtpInput < fieldLength - 1) {
+      setActiveOtpInput((pervious) => ++pervious);
     }
   };
   useEffect(() => {
@@ -53,7 +58,7 @@ const OTPInputs = ({
           <Fragment key={index}>
             <input
               ref={index === activeOtpInput ? inputRef : null}
-              type="number"
+              type="text"
               className={inputClassNames}
               onChange={(e) => onInputChange(e, index)}
               value={otp[index]}
